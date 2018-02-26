@@ -48,7 +48,7 @@ public class DeltaMilesOne {
 		WebElement findFlightsButton = driver.findElement(By.id("findFlightsSubmit"));
 		findFlightsButton.click();
 
-		waitForLoad();
+		waitForLoad(driver);
 		
 		driver.getTitle();
 		System.out.println(driver.getTitle());
@@ -60,7 +60,7 @@ public class DeltaMilesOne {
 		
 	}
 	
-	public void waitForLoad(WebDriver driver) {
+	public static void waitForLoad(WebDriver driver) {
         ExpectedCondition<Boolean> pageLoadCondition = new
                 ExpectedCondition<Boolean>() {
                     public Boolean apply(WebDriver driver) {
