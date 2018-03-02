@@ -1,5 +1,6 @@
 package com.delta;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,7 +15,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
@@ -23,11 +23,13 @@ import jxl.write.Number;
 import jxl.write.WritableCell;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 
 public class DeltaMilesOne {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws WriteException, BiffException, IOException {
 
 		System.setProperty("org.apache.commons.logging.Log",
 			    "org.apache.commons.logging.impl.Jdk14Logger");
@@ -82,11 +84,14 @@ public class DeltaMilesOne {
 		
 		ExcelWrite(lftnumber);
 		
+		driver.close();
 	}
 				
+
 	private static final String EXCEL_FILE_LOCATION = "C:\\temp\\DeltaMiles.xls";
 
-	public static void ExcelWrite(double lft)
+	
+	public static void ExcelWrite(double lft) throws RowsExceededException, WriteException, BiffException, IOException
 	{
 	
 		// Instantiate a Date object
@@ -98,37 +103,13 @@ public class DeltaMilesOne {
 	    String ftd = ft.format(date);
 
 		if (Files.exists(Paths.get(EXCEL_FILE_LOCATION))) {
-			
-		     //2. Write to an existing Excel file
-            Workbook workbook1 = null;
-            try {
-
-                java.io.File workbookeditable = new java.io.File(EXCEL_FILE_LOCATION);
-                workbook1 = Workbook.getWorkbook(workbookeditable);
-
-                Sheet sheet = workbook1.getSheet(0);
-                Cell cell1 = sheet.getCell(0, 0);
-                //test that cell has something in it.
-               for (int i=1;  i <= 3000;  i++) {
-            	   if (sheet.getCell(0, i) == null) {
-   		            Label dateAndTime1 = new Label(0, i, ftd);
-		            ((WritableSheet) sheet).addCell((WritableCell) dateAndTime1);
-
-		            Number lowFare1 = new Number(1, i, lft);
-		            ((WritableSheet) sheet).addCell(lowFare1);
-	
-		            //put in a writable line of code here
-		            workbook1.close();
-
-		            
-            		return;   
-            	   }
-               }
-            }	
-            finally { 
-			
-			
-		        //2. Create an Excel file
+			double lftnumber = lft;
+			ExcelUpdate(lftnumber);
+		}
+	    
+		if (!Files.exists(Paths.get(EXCEL_FILE_LOCATION))) {
+		
+		        //Create an Excel file
 		        WritableWorkbook myFirstWbook = null;
 		        try {
 	        		java.io.File workbook = new java.io.File(EXCEL_FILE_LOCATION);
@@ -153,38 +134,63 @@ public class DeltaMilesOne {
 		            myFirstWbook.write();
 		            myFirstWbook.close();
 		        }
-		      
-		             catch (IOException | BiffException e) {
-		                e.printStackTrace();
-		            } finally {
 
-		                if (workbook1 != null) {
-		                	workbook1.close();
-		                }
+         catch (IOException e) {
+			System.out.println("Had an IOException");
+            e.printStackTrace();
+        } catch (WriteException e) {
+			System.out.println("Had a WriteException");
+        	e.printStackTrace();
+        } 
+	            }
 
-		            }
-		            
+		}
+	
+		        
+		        
+	public static void ExcelUpdate(double lft) throws WriteException, IOException, BiffException
+	{	        
+		// Instantiate a Date object
+	    Date date = new Date();
+	    // display time and date using simpleDateFormat()
+	    SimpleDateFormat ft = new SimpleDateFormat ("yyyy.MM.dd kk:mm:ss");
+	    System.out.println(ft.format(date));
+	    String ftd = ft.format(date);
 
+	     //2. Write to an existing Excel file
+
+	           try {
+	        	   Workbook workbook1 = Workbook.getWorkbook(new File(EXCEL_FILE_LOCATION));
+	        	   WritableWorkbook aCopy = Workbook.createWorkbook(new File(EXCEL_FILE_LOCATION), workbook1);
+		           Sheet sheet = workbook1.getSheet(0);
+	                //test that cell has something in it.
+		               for (int i=0;  i <= 3000;  i++) {
+		            	   if (i > 1) {
+		            		   if (sheet.getRows()<=i) {
+			   		            Label dateAndTime1 = new Label(0, i+1, ftd);
+					            ((WritableSheet) sheet).addCell((WritableCell) dateAndTime1);
+	
+					            Number lowFare1 = new Number(1, i+1, lft);
+					            ((WritableSheet) sheet).addCell(lowFare1);
+				
+					            //put in a writable line of code here
+					            aCopy.write();
+					            aCopy.close();
+				        
+			            		return;   
+			            	   }
+		            	   }
+		               }
+		           	            
+            
 		        } catch (IOException e) {
+					System.out.println("Had an IOException");
 		            e.printStackTrace();
 		        } catch (WriteException e) {
-		            e.printStackTrace();
-		        } finally {
-
-		            if (myFirstWbook != null) {
-		                try {
-		                    myFirstWbook.close();
-		                } catch (IOException e) {
-		                    e.printStackTrace();
-		                } catch (WriteException e) {
-		                    e.printStackTrace();
-		                }
-		            }
-
-
-		        }
+					System.out.println("Had a WriteException");
+		        	e.printStackTrace();
+		        } 
 
 		    }
-		
-	}
+
 }
