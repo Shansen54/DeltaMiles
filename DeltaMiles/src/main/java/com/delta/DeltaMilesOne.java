@@ -162,15 +162,15 @@ public class DeltaMilesOne {
 	           try {
 	        	   Workbook workbook1 = Workbook.getWorkbook(new File(EXCEL_FILE_LOCATION));
 	        	   WritableWorkbook aCopy = Workbook.createWorkbook(new File(EXCEL_FILE_LOCATION), workbook1);
-		           Sheet sheet = workbook1.getSheet(0);
+		           WritableSheet sheet = aCopy.getSheet(0);
 	                //test that cell has something in it.
 		               for (int i=0;  i <= 3000;  i++) {
 		            	   if (i > 1) {
 		            		   if (sheet.getRows()<=i) {
-			   		            Label dateAndTime1 = new Label(0, i+1, ftd);
+			   		            Label dateAndTime1 = new Label(0, i, ftd);
 					            ((WritableSheet) sheet).addCell((WritableCell) dateAndTime1);
 	
-					            Number lowFare1 = new Number(1, i+1, lft);
+					            Number lowFare1 = new Number(1, i, lft);
 					            ((WritableSheet) sheet).addCell(lowFare1);
 				
 					            //put in a writable line of code here
