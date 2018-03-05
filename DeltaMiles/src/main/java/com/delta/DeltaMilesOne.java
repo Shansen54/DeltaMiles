@@ -15,7 +15,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -142,9 +141,9 @@ public class DeltaMilesOne {
 			System.out.println("Had a WriteException");
         	e.printStackTrace();
         } 
-	            }
+	  }
 
-		}
+	}
 	
 		        
 		        
