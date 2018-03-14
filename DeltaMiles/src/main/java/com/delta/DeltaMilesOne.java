@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
 //the selenium packages
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +15,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 //the jxl api packages used to write the excel spreadsheet.
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
@@ -152,7 +154,7 @@ public class DeltaMilesOne {
 		// Instantiate a Date object
 	    Date date = new Date();
 	    // display time and date using simpleDateFormat()
-	    SimpleDateFormat ft = new SimpleDateFormat ("yyyy.MM.dd kk:mm:ss");
+	    SimpleDateFormat ft = new SimpleDateFormat ("EEE, yyyy.MM.dd kk:mm:ss");
 	    System.out.println(ft.format(date));
 	    String ftd = ft.format(date);
 
